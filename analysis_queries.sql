@@ -24,17 +24,13 @@ GROUP BY category
 ORDER BY Category_revenue DESC;
 --4.SEASONALITY ( QUATERLY REVENUE )
 SELECT 
-    Category,
-    SUM(sales_month_1 + sales_month_2 + sales_month_3 + sales_month_4) AS Quater_1,
-    (price * (sales_month_1 + sales_month_2 + sales_month_3 + sales_month_4)) AS Q1_revenue,
-    SUM(sales_month_5 + sales_month_6 + sales_month_7 + sales_month_8) AS Quater_2,
-    (price * (sales_month_5 + sales_month_6 + sales_month_7 + sales_month_8)) AS Q2_revenue,
-    SUM(sales_month_9 + sales_month_10 + sales_month_11 + sales_month_12) AS Quater_3,
-    (price * (sales_month_9 + sales_month_10 + sales_month_11)) AS Q3_revenue
-FROM
-    data
-GROUP BY Category
-ORDER BY Q1_revenue DESC;
+    category, 
+    ANY_VALUE(price) AS price, -- Price-er agey ANY_VALUE bosiye de
+    SUM(price * (sales_month_1 + sales_month_2 + sales_month_3 + sales_month_4)) AS Total_Q1,
+    SUM(price * (sales_month_5 + sales_month_6 + sales_month_7 + sales_month_8)) AS Total_Q2,
+    SUM(price * (sales_month_9 + sales_month_10 + sales_month_11)) AS Total_Q3
+FROM data
+GROUP BY category;
 --5.TOP 5 CATEGORIES ( BY PRODUCT COUNT & AVERAGE PRICE )
 SELECT 
     category,
